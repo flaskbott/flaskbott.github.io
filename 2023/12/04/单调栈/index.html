@@ -1,0 +1,258 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>单调栈 | FlaskBott's</title><meta name="author" content="flaskbott,929719757@qq.com"><meta name="copyright" content="flaskbott"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="单调栈——学习笔记——学习自灵茶山艾府 LCR 038. 每日温度 请根据每日 气温 列表 temperatures ，重新生成一个列表，要求其对应位置的输出为：要想观测到更高的气温，至少需要等待的天数。如果气温在这之后都不会升高，请在该位置用 0 来代替。 示例 1: 输入: temperatures &#x3D; [73,74,75,71,69,72,76,73] 输出: [1,1,4,2,1">
+<meta property="og:type" content="article">
+<meta property="og:title" content="单调栈">
+<meta property="og:url" content="https://flaskbott.github.io/2023/12/04/%E5%8D%95%E8%B0%83%E6%A0%88/index.html">
+<meta property="og:site_name" content="FlaskBott&#39;s">
+<meta property="og:description" content="单调栈——学习笔记——学习自灵茶山艾府 LCR 038. 每日温度 请根据每日 气温 列表 temperatures ，重新生成一个列表，要求其对应位置的输出为：要想观测到更高的气温，至少需要等待的天数。如果气温在这之后都不会升高，请在该位置用 0 来代替。 示例 1: 输入: temperatures &#x3D; [73,74,75,71,69,72,76,73] 输出: [1,1,4,2,1">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.hqwalls.com/wp-content/uploads/2013/06/Bing-background-1920x1200-2013-05-18.jpg">
+<meta property="article:published_time" content="2023-12-04T06:46:06.000Z">
+<meta property="article:modified_time" content="2023-12-04T07:41:22.579Z">
+<meta property="article:author" content="flaskbott">
+<meta property="article:tag" content="算法竞赛">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.hqwalls.com/wp-content/uploads/2013/06/Bing-background-1920x1200-2013-05-18.jpg"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://flaskbott.github.io/2023/12/04/%E5%8D%95%E8%B0%83%E6%A0%88/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: {"limitDay":365,"position":"top","messagePrev":"It has been","messageNext":"days since the last update, the content of the article may be outdated."},
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: true,
+    post: true
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":50,"languages":{"author":"作者: flaskbott","link":"链接: ","source":"来源: FlaskBott's","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: true,
+  islazyload: true,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: true,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '单调栈',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: false,
+  postUpdate: '2023-12-04 15:41:22'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><meta name="generator" content="Hexo 7.0.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://www.hqwalls.com/wp-content/uploads/2013/06/Bing-background-1920x1200-2013-05-18.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">3</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">1</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page group hide" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fa fa-heartbeat"></i><span> 清单</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background: linear-gradient(20deg, #0062be, #925696, #cc426e, #fb0347)"><nav id="nav"><span id="blog-info"><a href="/" title="FlaskBott's"><span class="site-name">FlaskBott's</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page group hide" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fa fa-heartbeat"></i><span> 清单</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">单调栈</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2023-12-04T06:46:06.000Z" title="发表于 2023-12-04 14:46:06">2023-12-04</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2023-12-04T07:41:22.579Z" title="更新于 2023-12-04 15:41:22">2023-12-04</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="单调栈"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><p>单调栈——学习笔记——学习自灵茶山艾府</p>
+<p><a target="_blank" rel="noopener external nofollow noreferrer" href="https://leetcode.cn/problems/iIQa4I/">LCR 038. 每日温度</a></p>
+<p>请根据每日 气温 列表 temperatures ，重新生成一个列表，要求其对应位置的输出为：要想观测到更高的气温，至少需要等待的天数。如果气温在这之后都不会升高，请在该位置用 0 来代替。</p>
+<p><strong>示例</strong> <strong>1:</strong></p>
+<p><strong>输入</strong><strong>:</strong> temperatures &#x3D; [73,74,75,71,69,72,76,73]</p>
+<p><strong>输出</strong><strong>:</strong> [1,1,4,2,1,1,0,0]</p>
+<p><strong>示例</strong> <strong>2:</strong></p>
+<p><strong>输入</strong><strong>:</strong> temperatures &#x3D; [30,40,50,60]</p>
+<p><strong>输出</strong><strong>:</strong> [1,1,1,0]</p>
+<p><strong>示例</strong> <strong>3:</strong></p>
+<p><strong>输入</strong><strong>:</strong> temperatures &#x3D; [30,60,90]</p>
+<p><strong>输出</strong><strong>:</strong> [1,1,0]</p>
+<p>如果我们使用暴力做法：对于每个下标就只能一个元素一个元素地遍历数组得到下一个更大的元素或者说更高的温度。</p>
+<p>这种做法需要二重循环，即O（n^2）的时间复杂度</p>
+<p>把下面看成一座一座山，那么当我们从后往前遍历完5的时候（6-3-2-5），</p>
+<p>仔细想一想，在后续的遍历当中，我们还能看到6-3-2-5中的2和3吗？</p>
+<p>分类讨论一下，对于小于2的数，比如1，由于5的出现，2绝不可能成为1下一个更大的数，对于大于等于2的数，比如3，那就更不可能了，我们要找比3更大的数，所以由于5的出现，2和3永远也不可能作为5左侧某个数的下一个更大的数了，那我们可以放心把这两个数去掉，再也不去遍历它们了。</p>
+<p>模拟一下：</p>
+<p>一开始遍历到6，记录下来，然后遍历到3，3去和记录的6比较，6比3大，所以3这里的答案是1，过了一天就出现更高的温度。2也同理，遍历到5的时候，按照2-3-6的顺序遍历，2,3都不行，6可以，所以5的答案就是6的下标减去5的下标，等于3，表示过了3天出现更大的温度，对于下一个5,5不行，6可以，由于右边这个5也不可能是左边任何数的下一个更大的数了所以也去掉。</p>
+<p>——对于相同的数只需要保留左边的一个就好了。后面的遍历逻辑与上述一致。</p>
+<p>先进先出——&gt;用一个栈来维护就行了；不可能出现上面大下面小——&gt;栈中的元素是有序的；——————&gt;所以这个数据结构叫做单调栈。</p>
+<p>咋一看，二重循环-&gt;O（n^2）,但仔细想一想，每个元素入栈1次那么出栈也至多1次，所以st.pop()方法至多执行n次-&gt;时间复杂度O（n）；最坏情况下，栈中有n个元素，因此空间复杂度是O（n）。</p>
+<p>另外如果从左到右进行遍历，我们可以发现栈里面存储的数都还没有找到下一个更大的数，一旦我发现了一个比栈顶大的数，我就立刻更新栈顶的答案，同时把栈顶的元素出栈。这是看待问题的两个不同角度——你可以把下一个更大的数存到栈里面，也可以把没有找到下一个更大的数的那些数存到栈里面，两者是一样的。</p>
+<p>总结起来</p>
+<p>此外从左到右的做法更能体现单调栈的特点：因为当你遍历到的数小于等于栈顶，而栈顶元素是栈中最小元素，这就它小于等于栈中的任何元素。那么它将无法更新栈中的任何元素的答案。——因为栈是单调的。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">public</span> <span class="type">int</span>[] dailyTemperatures(<span class="type">int</span>[] temperatures) &#123;</span><br><span class="line"></span><br><span class="line">​    <span class="type">int</span> n=temperatures.length;</span><br><span class="line"></span><br><span class="line">​    <span class="type">int</span>[] ans=<span class="keyword">new</span> <span class="title class_">int</span>[n];</span><br><span class="line"></span><br><span class="line">​    ArrayDeque&lt;Integer&gt; stack=<span class="keyword">new</span> <span class="title class_">ArrayDeque</span>&lt;&gt;();</span><br><span class="line"></span><br><span class="line">​    <span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">0</span>;i&lt;n;i++)&#123;</span><br><span class="line"></span><br><span class="line">​      <span class="keyword">while</span>(!stack.isEmpty()</span><br><span class="line"></span><br><span class="line">​      &amp;&amp;temperatures[i]&gt;temperatures[stack.peek()])&#123;</span><br><span class="line"></span><br><span class="line">注意：我这是在循环内部来更新答案的，所以（这里的技巧）题目要计算什么，我们<span class="keyword">while</span>循环这里就写什么？</span><br><span class="line"></span><br><span class="line">​        <span class="type">int</span> j=stack.pop();</span><br><span class="line"></span><br><span class="line">​        ans[j]=i-j;</span><br><span class="line"></span><br><span class="line">​      &#125;</span><br><span class="line"></span><br><span class="line">​      stack.push(i);</span><br><span class="line"></span><br><span class="line">​    &#125; </span><br><span class="line"></span><br><span class="line">​    <span class="keyword">return</span> ans;</span><br><span class="line"></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><a target="_blank" rel="noopener external nofollow noreferrer" href="https://leetcode.cn/problems/trapping-rain-water/">42. 接雨水</a></p>
+<p>给定 <code>n</code> 个非负整数表示每个宽度为 <code>1</code> 的柱子的高度图，计算按此排列的柱子，下雨之后能接多少雨水。</p>
+<p><strong>示例</strong> <strong>1****：</strong></p>
+<p>![说明: <a target="_blank" rel="noopener external nofollow noreferrer" href="https://assets.leetcode-cn.com/aliyun-lc-upload/uploads/2018/10/22/rainwatertrap.png]">https://assets.leetcode-cn.com/aliyun-lc-upload/uploads/2018/10/22/rainwatertrap.png]</a></p>
+<p>输入：height &#x3D; [0,1,0,2,1,0,1,3,2,1,2,1]<br>输出：6<br>解释：上面是由数组 [0,1,0,2,1,0,1,3,2,1,2,1] 表示的高度图，在这种情况下，可以接 6 个单位的雨水（蓝色部分表示雨水）。 </p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/**</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">  相向双指针-&gt;你当前计算的值与数组的两边或者与两个类似数组有关</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">  就使用它。</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">  -&gt;本题接雨水——在某个位置上接的雨水正好是其最大前缀和最大后缀</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">  【要从下标对应接多少水思考】</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">  中的最小值再减去这个位置的高度-&gt;与两边有关-&gt;使用相向双指针</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment"> </span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">  知道不可能就移动。-&gt;在本题中，左指针的位置清楚它的最大前缀，</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">  不清楚最大后缀（因为左指针在移动时正好记录了最大前缀），</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">  右指针的位置清楚它的最大后缀，不清楚最大前缀，</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">  （因为右指针在移动时正好记录了最大后缀），</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">  【这里虽然说不清楚但是最大前缀/最大后缀都是最大值，是不会减小的】</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment"> </span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">  而本题接雨水——在某个位置上接的雨水正好是其最大前缀和最大后缀</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">  中的最小值再减去这个位置的高度</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">  （一旦越过最大前缀和最大后缀中的最小值，水就会流出去，</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">  少了那就不符合常理——它接水肯定是接到满的啊）</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">  注意：</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">  【这里虽然说不清楚但是最大前缀/最大后缀都是最大值，是不会减小的】</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">  因此只要：</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">  左边：最大前缀（已经清楚）小于最大后缀（不清楚），</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">  那么它的容量就是：最大前缀 减 其高度。</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">  右边：最大后缀（已经清楚）小于最大前缀（不清楚），</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">  那么它的容量就是：最大后缀 减 其高度。</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">  因为这时已经清楚的值就是：</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">  你要的最大前缀和最大后缀中的最小值，这样它的容量就定了，</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">  因为是已经清楚的值不可能会算错算漏-&gt;得到结果</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">  然后移动容量定了的一边的指针（左/右）</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">   */</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">trap</span><span class="params">(<span class="type">int</span>[] height)</span> &#123;</span><br><span class="line"></span><br><span class="line">​    <span class="type">int</span> pre_max=<span class="number">0</span>,n=height.length, suf_max=<span class="number">0</span>,ans=<span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">​    <span class="type">int</span> right=n-<span class="number">1</span>,left=<span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">​    <span class="keyword">while</span>(left&lt;right)&#123;</span><br><span class="line"></span><br><span class="line">​      pre_max=Math.max(pre_max,height[left]);</span><br><span class="line"></span><br><span class="line">​      suf_max=Math.max(suf_max,height[right]);</span><br><span class="line"></span><br><span class="line">​      <span class="keyword">if</span>(pre_max&gt;suf_max)&#123;</span><br><span class="line"></span><br><span class="line">​        ans+=suf_max-height[right];</span><br><span class="line"></span><br><span class="line">​        right-=<span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">​      &#125;<span class="keyword">else</span>&#123;</span><br><span class="line"></span><br><span class="line">​        ans+=pre_max-height[left];</span><br><span class="line"></span><br><span class="line">​        left+=<span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">​      &#125;</span><br><span class="line"></span><br><span class="line">​    &#125;</span><br><span class="line"></span><br><span class="line">​    <span class="keyword">return</span> ans;</span><br><span class="line"></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>前面学过接雨水的前后缀分解和双指针的做法，这两种做法都是假设每个位置都有一个水桶，我们计算每个水桶能接多少水，那相当于是竖着计算，那能不能横着计算呢。我们从左到右遍历，5-2-1-0，现在都没法接水，当我们遍历到4的时候就可以接水了，我们横着计算：高为1宽为1的水；高为1宽为2的水；高为2宽为3的水，我们可以想象我们接的不是水，而是水泥，水泥把这个坑给填平了，填平后这个高度就变为4了，他们合在一起变成一堵墙了，我们只需要在栈中记录5和4就好了。——从过程可以发现，面积由三个下标构成。【当前元素的下标，栈顶元素的下标】（他们差再减一是宽）和栈顶下面那个元素的下标——他们之间的最小值减去它得到高。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="type">int</span> <span class="title function_">trap</span><span class="params">(<span class="type">int</span>[] height)</span> &#123;</span><br><span class="line"></span><br><span class="line">​    </span><br><span class="line"></span><br><span class="line">​    <span class="type">int</span> ans=<span class="number">0</span>,n=height.length;</span><br><span class="line"></span><br><span class="line">​    ArrayDeque&lt;Integer&gt; st=<span class="keyword">new</span> <span class="title class_">ArrayDeque</span>&lt;&gt;();</span><br><span class="line"></span><br><span class="line">​    <span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">0</span>;i&lt;n;i++)&#123;</span><br><span class="line"></span><br><span class="line">​      <span class="keyword">while</span>(!st.isEmpty()&amp;&amp;height[i]&gt;=height[st.peek()])&#123;</span><br><span class="line"></span><br><span class="line">​        <span class="type">int</span> bottom_h=height[st.pop()];</span><br><span class="line"></span><br><span class="line">​        <span class="keyword">if</span>(st.size()==<span class="number">0</span>)&#123;</span><br><span class="line"></span><br><span class="line">​          <span class="keyword">break</span>;</span><br><span class="line"></span><br><span class="line">​        &#125;</span><br><span class="line"></span><br><span class="line">​        <span class="type">int</span> left=st.peek();</span><br><span class="line"></span><br><span class="line">​        <span class="type">int</span> dh=Math.min(height[left],height[i])-bottom_h;</span><br><span class="line"></span><br><span class="line">​        ans+=dh*(i-left-<span class="number">1</span>);</span><br><span class="line"></span><br><span class="line">​      &#125;</span><br><span class="line"></span><br><span class="line">​      st.push(i);</span><br><span class="line"></span><br><span class="line">​    &#125;</span><br><span class="line"></span><br><span class="line">​    <span class="keyword">return</span> ans;</span><br><span class="line"></span><br><span class="line">  &#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>上面的情况可以尝试使用单调栈解决。注意：在单调栈中相同的数只保留一个。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://flaskbott.github.io">flaskbott</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://flaskbott.github.io/2023/12/04/%E5%8D%95%E8%B0%83%E6%A0%88/">https://flaskbott.github.io/2023/12/04/单调栈/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow noreferrer" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://flaskbott.github.io" target="_blank">FlaskBott's</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E7%AE%97%E6%B3%95%E7%AB%9E%E8%B5%9B/">算法竞赛</a></div><div class="post_share"><div class="social-share" data-image="https://www.hqwalls.com/wp-content/uploads/2013/06/Bing-background-1920x1200-2013-05-18.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2023/12/04/%E5%9B%9E%E6%BA%AF/" title="回溯"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">回溯</div></div></a></div><div class="next-post pull-right"><a href="/2023/12/04/%E4%B8%A4%E5%8F%98%E9%87%8F%E9%97%AE%E9%A2%98/" title="两变量问题"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">两变量问题</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2023/12/04/%E5%9B%9E%E6%BA%AF/" title="回溯"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-12-04</div><div class="title">回溯</div></div></a></div><div><a href="/2023/12/04/%E4%B8%A4%E5%8F%98%E9%87%8F%E9%97%AE%E9%A2%98/" title="两变量问题"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-12-04</div><div class="title">两变量问题</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://www.hqwalls.com/wp-content/uploads/2013/06/Bing-background-1920x1200-2013-05-18.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">flaskbott</div><div class="author-info__description">:)</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">3</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">1</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/flaskbott/"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/flaskbott" rel="external nofollow noreferrer" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a><a class="social-icon" href="mailto:929719757@qq.com" rel="external nofollow noreferrer" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #4a7dbe;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/12/04/%E4%B8%A4%E5%8F%98%E9%87%8F%E9%97%AE%E9%A2%98/" title="两变量问题">两变量问题</a><time datetime="2023-12-04T06:51:44.000Z" title="发表于 2023-12-04 14:51:44">2023-12-04</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/12/04/%E5%8D%95%E8%B0%83%E6%A0%88/" title="单调栈">单调栈</a><time datetime="2023-12-04T06:46:06.000Z" title="发表于 2023-12-04 14:46:06">2023-12-04</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/12/04/%E5%9B%9E%E6%BA%AF/" title="回溯">回溯</a><time datetime="2023-12-04T06:41:39.000Z" title="发表于 2023-12-04 14:41:39">2023-12-04</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2023 By flaskbott</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener external nofollow noreferrer" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">Hi, welcome to my <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/flaskbott/">blog</a>!</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload/dist/lazyload.iife.min.js"></script><div class="js-pjax"></div><div class="aplayer no-destroy" data-id="60198" data-server="netease" data-type="playlist" data-fixed="true" data-autoplay="true"> </div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/metingjs/dist/Meting.min.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax/pjax.min.js"></script><script>let pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+
+  // removeEventListener
+  btf.removeGlobalFnEvent('pjax')
+  btf.removeGlobalFnEvent('themeChange')
+
+  document.getElementById('rightside').classList.remove('rightside-show')
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+
+  typeof disqusjs === 'object' && disqusjs.destroy()
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+})
+
+document.addEventListener('pjax:error', e => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404.html')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

@@ -1,0 +1,397 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>回溯 | FlaskBott's</title><meta name="author" content="flaskbott,929719757@qq.com"><meta name="copyright" content="flaskbott"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="回溯——学习自灵茶山艾府——学习笔记 选和不选||枚举选哪个 —— 思路 子集型回溯 17. 电话号码的字母组合 给定一个仅包含数字 2-9 的字符串，返回所有它能表示的字母组合。答案可以按 任意顺序 返回。 给出数字到字母的映射如下（与电话按键相同）。注意 1 不对应任何字母。 示例 1****： 输入：digits &#x3D; “23” 输出：[“ad”,”ae”,”af”,”bd”,”be">
+<meta property="og:type" content="article">
+<meta property="og:title" content="回溯">
+<meta property="og:url" content="https://flaskbott.github.io/2023/12/04/%E5%9B%9E%E6%BA%AF/index.html">
+<meta property="og:site_name" content="FlaskBott&#39;s">
+<meta property="og:description" content="回溯——学习自灵茶山艾府——学习笔记 选和不选||枚举选哪个 —— 思路 子集型回溯 17. 电话号码的字母组合 给定一个仅包含数字 2-9 的字符串，返回所有它能表示的字母组合。答案可以按 任意顺序 返回。 给出数字到字母的映射如下（与电话按键相同）。注意 1 不对应任何字母。 示例 1****： 输入：digits &#x3D; “23” 输出：[“ad”,”ae”,”af”,”bd”,”be">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.hqwalls.com/wp-content/uploads/2013/06/Bing-background-1920x1200-2013-05-18.jpg">
+<meta property="article:published_time" content="2023-12-04T06:41:39.000Z">
+<meta property="article:modified_time" content="2023-12-04T07:37:53.336Z">
+<meta property="article:author" content="flaskbott">
+<meta property="article:tag" content="算法竞赛">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.hqwalls.com/wp-content/uploads/2013/06/Bing-background-1920x1200-2013-05-18.jpg"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://flaskbott.github.io/2023/12/04/%E5%9B%9E%E6%BA%AF/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: {"limitDay":365,"position":"top","messagePrev":"It has been","messageNext":"days since the last update, the content of the article may be outdated."},
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: true,
+    post: true
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":50,"languages":{"author":"作者: flaskbott","link":"链接: ","source":"来源: FlaskBott's","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: true,
+  islazyload: true,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: true,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '回溯',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: false,
+  postUpdate: '2023-12-04 15:37:53'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><meta name="generator" content="Hexo 7.0.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://www.hqwalls.com/wp-content/uploads/2013/06/Bing-background-1920x1200-2013-05-18.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">3</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">1</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page group hide" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fa fa-heartbeat"></i><span> 清单</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background: linear-gradient(20deg, #0062be, #925696, #cc426e, #fb0347)"><nav id="nav"><span id="blog-info"><a href="/" title="FlaskBott's"><span class="site-name">FlaskBott's</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page group hide" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fa fa-heartbeat"></i><span> 清单</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">回溯</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2023-12-04T06:41:39.000Z" title="发表于 2023-12-04 14:41:39">2023-12-04</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2023-12-04T07:37:53.336Z" title="更新于 2023-12-04 15:37:53">2023-12-04</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="回溯"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><p>回溯——学习自灵茶山艾府——学习笔记</p>
+<p>选和不选||枚举选哪个 —— 思路</p>
+<p>子集型回溯</p>
+<p><a target="_blank" rel="noopener external nofollow noreferrer" href="https://leetcode.cn/problems/letter-combinations-of-a-phone-number/">17. 电话号码的字母组合</a></p>
+<p>给定一个仅包含数字 <code>2-9</code> 的字符串，返回所有它能表示的字母组合。答案可以按 <strong>任意顺序</strong> 返回。</p>
+<p>给出数字到字母的映射如下（与电话按键相同）。注意 1 不对应任何字母。</p>
+<p><strong>示例</strong> <strong>1****：</strong></p>
+<p><strong>输入：</strong>digits &#x3D; “23”</p>
+<p><strong>输出：</strong>[“ad”,”ae”,”af”,”bd”,”be”,”bf”,”cd”,”ce”,”cf”]</p>
+<p><strong>示例</strong> <strong>2****：</strong></p>
+<p><strong>输入：</strong>digits &#x3D; “”</p>
+<p><strong>输出：</strong>[]</p>
+<p><strong>示例</strong> <strong>3****：</strong></p>
+<p><strong>输入：</strong>digits &#x3D; “2”</p>
+<p><strong>输出：</strong>[“a”,”b”,”c”]</p>
+<p>这里要返回的字母组合并没有指明长度，不知道需要组成多长的字符串，如果你用循环枚举，你知道要循环多少遍吗？你要用循环的话，你也只能一次循环枚举一个字母，而此时你又不知道要求的字母组合的长度，那怎么循环？怎么办？&#x3D;》可以发现单纯的循环嵌套的表达能力是有局限性的。遍历二叉树的时候讲到了递归，介绍了原问题与子问题的概念。</p>
+<p>在这道题中，原问题是构造长为n的字符串—枚举一个字母后—&gt;子问题构造长为n-1的字符串。</p>
+<p>这里可以看出原问题与子问题是相似的，这种从原问题到子问题的过程适合用递归实现，那通过递归呢就可以实现多重循环的效果。那回溯和它有什么关系呢？</p>
+<p>回溯有一个增量构造答案的过程，这个就是回溯的过程，这个过程通常由递归实现。</p>
+<p>而很多人在思考这种递归过程的时候会想很多层，递归怎么往下递，怎么往上归，这个递归到底行不行，但其实只要把边界条件和非边界条件的逻辑写对了，其他的事情你交给数学归纳法就好也就是说不用管，即只要把边界条件和非边界条件的逻辑写对了，那么你的递归代码就一定能够得到正确的结果。</p>
+<p>因此思考递归的时候应该把重点放在边界条件和非边界条件的逻辑上，怎么把它写对，</p>
+<p>一个套路（重点来了）：  回溯三问（这是思考回溯问题和动态规划问题的模版）：</p>
+<p>当前操作是什么？或者说每一步的操作是什么？比如我们在这里要枚举第i个字母</p>
+<p>当前子问题是什么？—构造字符串 &gt;&#x3D;i 的部分</p>
+<p>下一个子问题是什么？—构造字符串 &gt;&#x3D;i+1 的部分</p>
+<p>dfs(i)-&gt;dfs(i+1)</p>
+<p>以上是回溯的基本套路。</p>
+<p>回溯问题可以分为子集型回溯，组合型回溯和排列型回溯</p>
+<p>子集型回溯（这个在动态规划中用的多）：每个元素是选还是不选——正如其名：</p>
+<p>子集——就是看集合中的每个元素，选它还是不选它。</p>
+<p>要想生成所有两种思路，区别在于当前操作是什么？</p>
+<p>如果站在输入的角度思考，那就是枚举第i个数是选它还是不选它——当前操作</p>
+<p>子问题？-&gt;从下标大于等于i的数字中构造子集，下一个子问题？-&gt;从下标大于等于i+1的数字中构造子集。——</p>
+<p><a target="_blank" rel="noopener external nofollow noreferrer" href="https://leetcode.cn/problems/subsets/">78. 子集</a></p>
+<p>给你一个整数数组 <code>nums</code> ，数组中的元素 <strong>互不相同</strong> 。返回该数组所有可能的子集（幂集）。</p>
+<p>解集 <strong>不能</strong> 包含重复的子集。你可以按 <strong>任意顺序</strong> 返回解集。</p>
+<p><strong>示例</strong> <strong>1****：</strong></p>
+<p>输入：nums &#x3D; [1,2,3]<br>输出：[[],[1],[2],[1,2],[3],[1,3],[2,3],[1,2,3]]</p>
+<p><strong>示例</strong> <strong>2****：</strong></p>
+<p>输入：nums &#x3D; [0]<br>输出：[[],[0]]</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">本题在选择第i个数的情况下需要进行“恢复现场”。不选择第i个数的情况下可以直接递归。</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"></span><br><span class="line">  List&lt;List&lt;Integer&gt;&gt; ans=<span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line"></span><br><span class="line">  List&lt;Integer&gt; path=<span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line"></span><br><span class="line">  <span class="keyword">public</span> List&lt;List&lt;Integer&gt;&gt; <span class="title function_">subsets</span><span class="params">(<span class="type">int</span>[] nums)</span>&#123;</span><br><span class="line"></span><br><span class="line"> </span><br><span class="line"></span><br><span class="line">​    dfs(<span class="number">0</span>,nums);</span><br><span class="line"></span><br><span class="line"> </span><br><span class="line"></span><br><span class="line">​    <span class="keyword">return</span> ans;</span><br><span class="line"></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line"> </span><br><span class="line"></span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">dfs</span><span class="params">(<span class="type">int</span> i,<span class="type">int</span>[] nums)</span>&#123;</span><br><span class="line"></span><br><span class="line">​    <span class="keyword">if</span>(i==nums.length)&#123;</span><br><span class="line"></span><br><span class="line">​      ans.add(<span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;(path));</span><br><span class="line"></span><br><span class="line">​      <span class="keyword">return</span> ;  </span><br><span class="line"></span><br><span class="line">​    &#125;</span><br><span class="line"></span><br><span class="line">​    dfs(i+<span class="number">1</span>,nums);</span><br><span class="line"></span><br><span class="line">​    path.add(nums[i]);</span><br><span class="line"></span><br><span class="line">​    dfs(i+<span class="number">1</span>,nums);</span><br><span class="line"></span><br><span class="line">​    path.remove(path.size()-<span class="number">1</span>);</span><br><span class="line"></span><br><span class="line"> </span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>关于“恢复现场”的个人理解：<br> 在递归到某一“叶子节点”（非最后一个叶子）时，答案需要向上返回，而此时还有其他的子树（与前述节点不在同一子树）未被递归到，又由于path为全局变量。若直接返回，会将本不属于该子树的答案带上去，故需要恢复现场。<br> 恢复现场的方式为：在递归完成后 dfs(i+1); 后，进行与“当前操作”相反的操作，“反当前操作”。</p>
+<p>还要注意path为全局变量，加入答案要用传递值而不是传递引用，不然它传的就是这个引用，那么它前面递归到的结果就会丢失。</p>
+<p>传递值：ans.add(new ArrayList&lt;&gt;(path));</p>
+<p>另一个角度：站在答案的角度：每次必须选择一个数，例如：枚举第一个数选择谁，</p>
+<p>即每次枚举一个数字——枚举一个数字是当前操作，另外这里需要注意{1,2}和{2,1}是重复的子集——即我们不考虑顺序——&gt;那我们可以规定一个顺序比如是严格递增的，那么枚举的数字就必须大于上一个枚举的数字：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">由于子集的长度没有约束，那么每个长度都可以是答案，因此每次递归都是一个答案。</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"></span><br><span class="line">  List&lt;List&lt;Integer&gt;&gt; ans=<span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line"></span><br><span class="line">  List&lt;Integer&gt; path=<span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line"></span><br><span class="line">  <span class="keyword">public</span> List&lt;List&lt;Integer&gt;&gt; <span class="title function_">subsets</span><span class="params">(<span class="type">int</span>[] nums)</span>&#123;</span><br><span class="line"></span><br><span class="line"> </span><br><span class="line"></span><br><span class="line">​    dfs(<span class="number">0</span>,nums);</span><br><span class="line"></span><br><span class="line"> </span><br><span class="line"></span><br><span class="line">​    <span class="keyword">return</span> ans;</span><br><span class="line"></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line"> </span><br><span class="line"></span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">dfs</span><span class="params">(<span class="type">int</span> i,<span class="type">int</span>[] nums)</span>&#123;</span><br><span class="line"></span><br><span class="line">​    ans.add(<span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;(path));</span><br><span class="line"></span><br><span class="line">​    <span class="keyword">if</span>(i==nums.length)&#123;</span><br><span class="line"></span><br><span class="line">​      </span><br><span class="line"></span><br><span class="line">​      <span class="keyword">return</span> ;  </span><br><span class="line"></span><br><span class="line">​    &#125;</span><br><span class="line"></span><br><span class="line">​    <span class="keyword">for</span>(<span class="type">int</span> j=i;j&lt;nums.length;j++)&#123;</span><br><span class="line"></span><br><span class="line">​      path.add(nums[j]);</span><br><span class="line"></span><br><span class="line">​    dfs(j+<span class="number">1</span>,nums);</span><br><span class="line"></span><br><span class="line">​    path.remove(path.size()-<span class="number">1</span>);</span><br><span class="line"></span><br><span class="line"> </span><br><span class="line"></span><br><span class="line">​    &#125;</span><br><span class="line"></span><br><span class="line">​    </span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><a target="_blank" rel="noopener external nofollow noreferrer" href="https://leetcode.cn/problems/palindrome-partitioning/">131. 分割回文串</a></p>
+<p>给你一个字符串 <code>s</code>，请你将 <code>s</code> 分割成一些子串，使每个子串都是 <strong>回文串</strong> 。返回 <code>s</code> 所有可能的分割方案。</p>
+<p><strong>回文串</strong> 是正着读和反着读都一样的字符串。</p>
+<p><strong>示例</strong> <strong>1****：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">输入：s = &quot;aab&quot;</span><br><span class="line">输出：[[&quot;a&quot;,&quot;a&quot;,&quot;b&quot;],[&quot;aa&quot;,&quot;b&quot;]]</span><br></pre></td></tr></table></figure>
+
+<p>站在答案的角度：</p>
+<p>枚举逗号的位置相当于是枚举回文子串结束的位置：</p>
+<p>这里由于每个字母都必须在答案中，因此必须处理完了才能加入到答案中。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"></span><br><span class="line">  List&lt;List&lt;String&gt;&gt;  ans=<span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line"></span><br><span class="line">  List&lt;String&gt; path=<span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line"></span><br><span class="line">  String s;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">public</span> List&lt;List&lt;String&gt;&gt; <span class="title function_">partition</span><span class="params">(String s)</span> &#123;</span><br><span class="line"></span><br><span class="line">​    <span class="built_in">this</span>.s=s;</span><br><span class="line"></span><br><span class="line">​    dfs(<span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">​    <span class="keyword">return</span> ans;</span><br><span class="line"></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">checkit</span><span class="params">(<span class="type">int</span> l,<span class="type">int</span> r)</span>&#123;</span><br><span class="line"></span><br><span class="line">​    </span><br><span class="line"></span><br><span class="line">​    <span class="keyword">while</span>(l&lt;r)&#123;</span><br><span class="line"></span><br><span class="line">​      <span class="keyword">if</span>(s.charAt(l)!=s.charAt(r))&#123;</span><br><span class="line"></span><br><span class="line">​        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line"></span><br><span class="line">​      &#125;</span><br><span class="line"></span><br><span class="line">​      l++;r--;</span><br><span class="line"></span><br><span class="line">​    &#125;</span><br><span class="line"></span><br><span class="line">​    <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line"></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  </span><br><span class="line"></span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">dfs</span><span class="params">(<span class="type">int</span> i)</span>&#123;</span><br><span class="line"></span><br><span class="line">​    <span class="keyword">if</span>(i==s.length())&#123;</span><br><span class="line"></span><br><span class="line">​      ans.add(<span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;(path));</span><br><span class="line"></span><br><span class="line">​      <span class="keyword">return</span>;</span><br><span class="line"></span><br><span class="line">​    &#125;</span><br><span class="line"></span><br><span class="line">​    <span class="keyword">for</span>(<span class="type">int</span> j=i;j&lt;s.length();j++)&#123;</span><br><span class="line"></span><br><span class="line">​      <span class="keyword">if</span>(checkit(i,j))&#123;</span><br><span class="line"></span><br><span class="line">​        path.add(s.substring(i,j+<span class="number">1</span>));</span><br><span class="line"></span><br><span class="line">​        dfs(j+<span class="number">1</span>);</span><br><span class="line"></span><br><span class="line">​        path.remove(path.size()-<span class="number">1</span>);</span><br><span class="line"></span><br><span class="line">​      &#125;</span><br><span class="line"></span><br><span class="line">​    &#125;</span><br><span class="line"></span><br><span class="line">​    </span><br><span class="line"></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"> </span><br><span class="line"></span><br><span class="line">选不选择第i个位置后面的逗号</span><br><span class="line"></span><br><span class="line"> </span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"></span><br><span class="line">  List&lt;List&lt;String&gt;&gt;  ans=<span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line"></span><br><span class="line">  List&lt;String&gt; path=<span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line"></span><br><span class="line">  String s;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">public</span> List&lt;List&lt;String&gt;&gt; <span class="title function_">partition</span><span class="params">(String s)</span> &#123;</span><br><span class="line"></span><br><span class="line">​    <span class="built_in">this</span>.s=s;</span><br><span class="line"></span><br><span class="line">​    dfs(<span class="number">0</span>,<span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">​    <span class="keyword">return</span> ans;</span><br><span class="line"></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">checkit</span><span class="params">(<span class="type">int</span> l,<span class="type">int</span> r)</span>&#123;</span><br><span class="line"></span><br><span class="line">​    </span><br><span class="line"></span><br><span class="line">​    <span class="keyword">while</span>(l&lt;r)&#123;</span><br><span class="line"></span><br><span class="line">​      <span class="keyword">if</span>(s.charAt(l)!=s.charAt(r))&#123;</span><br><span class="line"></span><br><span class="line">​        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line"></span><br><span class="line">​      &#125;</span><br><span class="line"></span><br><span class="line">​      l++;r--;</span><br><span class="line"></span><br><span class="line">​    &#125;</span><br><span class="line"></span><br><span class="line">​    <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line"></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">dfs</span><span class="params">(<span class="type">int</span> i,<span class="type">int</span> start)</span>&#123;</span><br><span class="line"></span><br><span class="line">​    <span class="keyword">if</span>(i==s.length())&#123;</span><br><span class="line"></span><br><span class="line">​      ans.add(<span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;(path));</span><br><span class="line"></span><br><span class="line">​      <span class="keyword">return</span>;</span><br><span class="line"></span><br><span class="line">​    &#125;</span><br><span class="line"></span><br><span class="line">​    <span class="keyword">if</span>(i&lt;s.length()-<span class="number">1</span>)&#123;</span><br><span class="line"></span><br><span class="line">​      dfs(i+<span class="number">1</span>,start);</span><br><span class="line"></span><br><span class="line">​    &#125;</span><br><span class="line"></span><br><span class="line">​    <span class="keyword">if</span>(checkit(start,i))&#123;</span><br><span class="line"></span><br><span class="line">​      path.add(s.substring(start,i+<span class="number">1</span>));</span><br><span class="line"></span><br><span class="line">​      dfs(i+<span class="number">1</span>,i+<span class="number">1</span>);</span><br><span class="line"></span><br><span class="line">​      path.remove(path.size()-<span class="number">1</span>);</span><br><span class="line"></span><br><span class="line">​    &#125;</span><br><span class="line"></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>组合型回溯 其实回溯思路都是选和不选||枚举选哪个 </p>
+<p><a target="_blank" rel="noopener external nofollow noreferrer" href="https://leetcode.cn/problems/combinations/">77. 组合</a></p>
+<p>给定两个整数 n 和 k，返回范围 [1, n] 中所有可能的 k 个数的组合。</p>
+<p>你可以按 <strong>任何顺序</strong> 返回答案。</p>
+<p><strong>示例</strong> <strong>1****：</strong></p>
+<p><strong>输入：</strong>n &#x3D; 4, k &#x3D; 2</p>
+<p><strong>输出：</strong></p>
+<p>[</p>
+<p> [2,4],</p>
+<p> [3,4],</p>
+<p> [2,3],</p>
+<p> [1,2],</p>
+<p> [1,3],</p>
+<p> [1,4],</p>
+<p>]</p>
+<p><strong>示例</strong> <strong>2****：</strong></p>
+<p><strong>输入：</strong>n &#x3D; 1, k &#x3D; 1</p>
+<p><strong>输出：</strong>[[1]]</p>
+<p>组合是没有顺序的，即[2,3]和[3,2]两者算一个组合，因此要自己规定一个顺序避免重复枚举</p>
+<p>顺序通常是假定递增的。那么</p>
+<p>左图是k&#x3D;2时，只需要选择两个数，那么我们可以在递归到两个数就记录答案并return，不需要递归到三个数的情况，因为不可能是答案了；右图k&#x3D;3时，如果第一个数选2，那么按照我们规定的顺序，后面只能选1了，不可能得到答案，因此可以提前return，不再递归。可以看出，</p>
+<p>相比子集问题，组合问题可以做额外的优化。</p>
+<p>我们是从大到小枚举的，如果当前从i开始枚举，那么可以选择[1,i]中的数。</p>
+<p>剪枝——形象地说，剪掉这棵搜索树的一些分支，通过剪枝，我们就可以缩小搜索树的规模了，</p>
+<p>这里是倒序枚举，不等式是i&lt;d(条件);如果正序枚举的话，会更复杂，所以要灵活变通，使用倒序枚举。</p>
+<p>代码方面！！！！：</p>
+<p>我们先把逻辑主体写完，然后再写剪枝</p>
+<p>这里的剪枝也可以写到循环里面，毕竟循环的一部分已经不可能是答案了。</p>
+<p>回溯的时间复杂度怎么分析？——&gt;其实这里是有一个公式的——————&gt;</p>
+<p>就是把搜索树的每个叶子都拆开看，就是叶子的个数乘上从根到叶子的路径长度</p>
+<p><a target="_blank" rel="noopener external nofollow noreferrer" href="https://leetcode.cn/problems/combination-sum-iii/">216. 组合总和 III</a></p>
+<p>找出所有相加之和为 n 的 k 个数的组合，且满足下列条件：</p>
+<ul>
+<li>只使用数字1到9</li>
+<li>每个数字 <strong>最多使用一次</strong></li>
+</ul>
+<p>返回 <em>所有可能的有效组合的列表</em> 。该列表不能包含相同的组合两次，组合可以以任何顺序返回。</p>
+<p><strong>示例</strong> <strong>1:</strong></p>
+<p><strong>输入</strong><strong>:</strong> *<strong>k*</strong> &#x3D; 3, *<strong>n*</strong> &#x3D; 7</p>
+<p><strong>输出</strong><strong>:</strong> [[1,2,4]]</p>
+<p><strong>解释</strong><strong>:</strong></p>
+<p>1 + 2 + 4 &#x3D; 7</p>
+<p>没有其他符合的组合了。</p>
+<p>我们要围绕着约束进行剪枝。</p>
+<p>这题多了一个 和为n 的约束，那就围绕着这个约束剪枝。比如我们选择的元素之和已经超过n了，那肯定不需要继续递归了，这是一个剪枝优化。写代码时，也可以倒过来，看成需要选择 和为t 的数字初始为n，每选择一个数j，t就减小j，如果t小于0，就可以直接return。从对称的角度思考：有t小于一个数的剪枝，也有t大于一个数的剪枝，（知道不可能就退出）</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"></span><br><span class="line">  List&lt;List&lt;Integer&gt;&gt; ans=<span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line"></span><br><span class="line">  List&lt;Integer&gt; path=<span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line"></span><br><span class="line">  <span class="type">int</span> k;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">public</span> List&lt;List&lt;Integer&gt;&gt; <span class="title function_">combinationSum3</span><span class="params">(<span class="type">int</span> k, <span class="type">int</span> n)</span> &#123;</span><br><span class="line"></span><br><span class="line">​    <span class="built_in">this</span>.k=k;</span><br><span class="line"></span><br><span class="line">​    dfs(<span class="number">9</span>,n);</span><br><span class="line"></span><br><span class="line">​    <span class="keyword">return</span> ans;</span><br><span class="line"></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">dfs</span><span class="params">(<span class="type">int</span> i,<span class="type">int</span> t)</span>&#123;</span><br><span class="line"></span><br><span class="line">​    <span class="type">int</span> d=k-path.size();</span><br><span class="line"></span><br><span class="line">​    <span class="keyword">if</span>(t&lt;<span class="number">0</span>||t&gt;(<span class="number">2</span>*i-d+<span class="number">1</span>)*d/<span class="number">2</span>)&#123;<span class="comment">//由于只有t==0时才能通过t&lt;0ort&gt;0///因此再加入答案时不需要额外判断t是否等于0。</span></span><br><span class="line"></span><br><span class="line">​    <span class="comment">//如果路径长度等于k，d是等于0的，因此此时条件为t&lt;0ort&gt;0</span></span><br><span class="line"></span><br><span class="line">​      <span class="keyword">return</span>;</span><br><span class="line"></span><br><span class="line">​    &#125;</span><br><span class="line"></span><br><span class="line">​    <span class="keyword">if</span>(path.size()==k)&#123;</span><br><span class="line"></span><br><span class="line">​      ans.add(<span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;(path));</span><br><span class="line"></span><br><span class="line">​      <span class="keyword">return</span>;</span><br><span class="line"></span><br><span class="line">​    &#125;</span><br><span class="line"></span><br><span class="line">​    <span class="keyword">for</span>(<span class="type">int</span> j=i;j&gt;d-<span class="number">1</span>;j--)&#123;</span><br><span class="line"></span><br><span class="line">​      path.add(j);</span><br><span class="line"></span><br><span class="line">​      dfs(j-<span class="number">1</span>,t-j);</span><br><span class="line"></span><br><span class="line">​      path.remove(path.size()-<span class="number">1</span>);</span><br><span class="line"></span><br><span class="line">​    &#125;</span><br><span class="line"></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><a target="_blank" rel="noopener external nofollow noreferrer" href="https://leetcode.cn/problems/generate-parentheses/">22. 括号生成</a></p>
+<p>数字 n 代表生成括号的对数，请你设计一个函数，用于能够生成所有可能的并且 <strong>有效的</strong> 括号组合。</p>
+<p><strong>示例</strong> <strong>1****：</strong></p>
+<p><strong>输入：</strong>n &#x3D; 3</p>
+<p><strong>输出：</strong>[“((()))”,”(()())”,”(())()”,”()(())”,”()()()”]</p>
+<p><strong>示例</strong> <strong>2****：</strong></p>
+<p><strong>输入：</strong>n &#x3D; 1</p>
+<p><strong>输出：</strong>[“()”]</p>
+<p>既然选和不选都要填一个字符，那这题我就要用选和不选的思路来做了。</p>
+<p>N&#x3D;3的时候，你左括号的个数是不能超过3的。所以你一旦你选择了3个左括号，你就只能填右括号，同时右括号的个数也不能超过左括号的个数。左右括号相等的时候，你就只能选择左括号了。——这里可以看出左右括号的个数是有约束的。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"></span><br><span class="line">  List&lt;String&gt; ans=<span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line"></span><br><span class="line">  <span class="type">char</span>[] path;</span><br><span class="line"></span><br><span class="line">  <span class="type">int</span> m,n;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">public</span> List&lt;String&gt; <span class="title function_">generateParenthesis</span><span class="params">(<span class="type">int</span> n)</span> &#123;</span><br><span class="line"></span><br><span class="line">​    m=<span class="number">2</span>*n;</span><br><span class="line"></span><br><span class="line">​    <span class="built_in">this</span>.n=n;</span><br><span class="line"></span><br><span class="line">​    path=<span class="keyword">new</span> <span class="title class_">char</span>[m];</span><br><span class="line"></span><br><span class="line">​    dfs(<span class="number">0</span>,<span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">​    <span class="keyword">return</span> ans;</span><br><span class="line"></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">dfs</span><span class="params">(<span class="type">int</span> i,<span class="type">int</span> open)</span>&#123;</span><br><span class="line"></span><br><span class="line">​    <span class="keyword">if</span>(i==m)&#123;</span><br><span class="line"></span><br><span class="line">​      ans.add(<span class="keyword">new</span> <span class="title class_">String</span>(path));</span><br><span class="line"></span><br><span class="line">​      <span class="keyword">return</span> ;</span><br><span class="line"></span><br><span class="line">​    &#125;</span><br><span class="line"></span><br><span class="line">​    <span class="keyword">if</span>(open&lt;n)&#123;</span><br><span class="line"></span><br><span class="line">​      path[i]=<span class="string">&#x27;(&#x27;</span>;</span><br><span class="line"></span><br><span class="line">​      dfs(i+<span class="number">1</span>,open+<span class="number">1</span>);</span><br><span class="line"></span><br><span class="line">​    &#125;</span><br><span class="line"></span><br><span class="line">​    <span class="keyword">if</span>(i-open&lt;open)&#123;</span><br><span class="line"></span><br><span class="line">​      path[i]=<span class="string">&#x27;)&#x27;</span>;</span><br><span class="line"></span><br><span class="line">​      dfs(i+<span class="number">1</span>,open);</span><br><span class="line"></span><br><span class="line">​    &#125;</span><br><span class="line"></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<p>选和不选||枚举选哪个  思路</p>
+<p><a target="_blank" rel="noopener external nofollow noreferrer" href="https://leetcode.cn/problems/remove-invalid-parentheses/">301. 删除无效的括号</a></p>
+<p>给你一个由若干括号和字母组成的字符串 s ，删除最小数量的无效括号，使得输入的字符串有效。</p>
+<p>返回所有可能的结果。答案可以按 <strong>任意顺序</strong> 返回。</p>
+<p><strong>示例</strong> <strong>1****：</strong></p>
+<p><strong>输入：</strong>s &#x3D; “()())()”</p>
+<p><strong>输出：</strong>[“(())()”,”()()()”]</p>
+<p><strong>示例</strong> <strong>2****：</strong></p>
+<p><strong>输入：</strong>s &#x3D; “(a)())()”</p>
+<p><strong>输出：</strong>[“(a())()”,”(a)()()”]</p>
+<p><strong>示例</strong> <strong>3****：</strong></p>
+<p><strong>输入：</strong>s &#x3D; “)(“</p>
+<p><strong>输出：</strong>[“”]</p>
+<p>回溯三问： 1、当前问题：每一个位置删除或者不删除 2、子问题：第i个位置是否删除 3、下一个子问题：第i + 1个位置是否删除 采用哈希去重，也可剪枝实现</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"></span><br><span class="line">  List&lt;String&gt; ans;</span><br><span class="line"></span><br><span class="line">  Set&lt;String&gt; set = <span class="keyword">new</span> <span class="title class_">HashSet</span>&lt;&gt;();<span class="comment">//哈希表去重</span></span><br><span class="line"></span><br><span class="line">  <span class="type">int</span> len;</span><br><span class="line"></span><br><span class="line">  List&lt;Integer&gt; path = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line"></span><br><span class="line">  String string;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">public</span> List&lt;String&gt; <span class="title function_">removeInvalidParentheses</span><span class="params">(String s)</span> &#123;</span><br><span class="line"></span><br><span class="line">​    <span class="type">int</span> <span class="variable">left</span> <span class="operator">=</span> <span class="number">0</span>, right = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">​    <span class="keyword">for</span>(<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; s.length(); i++)&#123;<span class="comment">//计算左右需要删掉的最小数量</span></span><br><span class="line"></span><br><span class="line">​      <span class="type">char</span> <span class="variable">c</span> <span class="operator">=</span> s.charAt(i);</span><br><span class="line"></span><br><span class="line">​      <span class="keyword">if</span>(c == <span class="string">&#x27;(&#x27;</span>) left++;</span><br><span class="line"></span><br><span class="line">​      <span class="keyword">else</span> <span class="keyword">if</span>(c == <span class="string">&#x27;)&#x27;</span>) &#123;<span class="comment">//注意中间可能有其他字符所以不能直接else，还需要判断一次右括号</span></span><br><span class="line"></span><br><span class="line">​        <span class="keyword">if</span>(left == <span class="number">0</span>) right++;</span><br><span class="line"></span><br><span class="line">​        <span class="keyword">else</span> left--;</span><br><span class="line"></span><br><span class="line">​      &#125;</span><br><span class="line"></span><br><span class="line">​    &#125;</span><br><span class="line"></span><br><span class="line">​    len = s.length();</span><br><span class="line"></span><br><span class="line">​    string = s;</span><br><span class="line"></span><br><span class="line">​    dfs(<span class="number">0</span>, left, right);</span><br><span class="line"></span><br><span class="line">​    ans = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;(set);</span><br><span class="line"></span><br><span class="line">​    <span class="keyword">return</span> ans;</span><br><span class="line"></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">dfs</span><span class="params">(<span class="type">int</span> index, <span class="type">int</span> left, <span class="type">int</span> right)</span><span class="comment">//当前位置是否去掉，选或不选</span></span><br><span class="line"></span><br><span class="line">  &#123;</span><br><span class="line"></span><br><span class="line">​    <span class="keyword">if</span>(left == <span class="number">0</span> &amp;&amp; right == <span class="number">0</span>)<span class="comment">//边界，括号去掉完了，获得去掉后的串，检查合法后加入哈希并return</span></span><br><span class="line"></span><br><span class="line">​    &#123;</span><br><span class="line"></span><br><span class="line">​      <span class="type">StringBuilder</span> <span class="variable">sb</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">StringBuilder</span>();</span><br><span class="line"></span><br><span class="line">​      <span class="keyword">for</span>(<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; len; i++)</span><br><span class="line"></span><br><span class="line">​        <span class="keyword">if</span>(!path.contains(i)) sb.append(string.charAt(i));</span><br><span class="line"></span><br><span class="line">​      <span class="type">String</span> <span class="variable">cur</span> <span class="operator">=</span> sb.toString();</span><br><span class="line"></span><br><span class="line">​      <span class="keyword">if</span>(isValid(cur)) set.add(cur);</span><br><span class="line"></span><br><span class="line">​      <span class="keyword">return</span>;</span><br><span class="line"></span><br><span class="line">​    &#125;</span><br><span class="line"></span><br><span class="line">​    <span class="keyword">if</span>(left + right &gt; len - index) <span class="keyword">return</span>;<span class="comment">//剩余字符数量无法凑够删除数量，直接return</span></span><br><span class="line"></span><br><span class="line">​    <span class="type">char</span> <span class="variable">cur</span> <span class="operator">=</span> string.charAt(index);</span><br><span class="line"></span><br><span class="line">​    <span class="keyword">if</span>(cur == <span class="string">&#x27;(&#x27;</span> &amp;&amp; left &gt; <span class="number">0</span>)<span class="comment">//当前作为左括号的位置去掉</span></span><br><span class="line"></span><br><span class="line">​    &#123;</span><br><span class="line"></span><br><span class="line">​      path.add(index);</span><br><span class="line"></span><br><span class="line">​      dfs(index + <span class="number">1</span>, left - <span class="number">1</span>, right);</span><br><span class="line"></span><br><span class="line">​      path.remove(path.size() - <span class="number">1</span>);</span><br><span class="line"></span><br><span class="line">​    &#125;</span><br><span class="line"></span><br><span class="line">​    <span class="keyword">else</span> <span class="keyword">if</span>(cur == <span class="string">&#x27;)&#x27;</span> &amp;&amp; right &gt; <span class="number">0</span>)<span class="comment">//当前作为右括号的位置去掉</span></span><br><span class="line"></span><br><span class="line">​    &#123;</span><br><span class="line"></span><br><span class="line">​      path.add(index);</span><br><span class="line"></span><br><span class="line">​      dfs(index + <span class="number">1</span>, left, right - <span class="number">1</span>);</span><br><span class="line"></span><br><span class="line">​      path.remove(path.size() - <span class="number">1</span>);</span><br><span class="line"></span><br><span class="line">​    &#125;</span><br><span class="line"></span><br><span class="line">​    dfs(index + <span class="number">1</span>, left, right);<span class="comment">//当前位置不去掉（不管是左右括号还是其他字符）</span></span><br><span class="line"></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">isValid</span><span class="params">(String s)</span><span class="comment">//检查是否为有效括号串</span></span><br><span class="line"></span><br><span class="line">  &#123;</span><br><span class="line"></span><br><span class="line">​    <span class="type">int</span> <span class="variable">cnt</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">​    <span class="keyword">for</span>(<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; s.length(); i++)</span><br><span class="line"></span><br><span class="line">​    &#123;</span><br><span class="line"></span><br><span class="line">​      <span class="type">char</span> <span class="variable">c</span> <span class="operator">=</span> s.charAt(i);</span><br><span class="line"></span><br><span class="line">​      <span class="keyword">if</span>(c == <span class="string">&#x27;(&#x27;</span>) cnt++;</span><br><span class="line"></span><br><span class="line">​      <span class="keyword">else</span> <span class="keyword">if</span>(c == <span class="string">&#x27;)&#x27;</span>) &#123;</span><br><span class="line"></span><br><span class="line">​        cnt--;</span><br><span class="line"></span><br><span class="line">​        <span class="keyword">if</span>(cnt &lt; <span class="number">0</span>) <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line"></span><br><span class="line">​      &#125;</span><br><span class="line"></span><br><span class="line">​    &#125;</span><br><span class="line"></span><br><span class="line">​    <span class="keyword">return</span> cnt == <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line"> </span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">我的错误直接在path删除字符，导致下标变化，导致下标越界，出错；没有计算至少要删除多少个字符——只是觉得这样一定能得到答案（迷失了）（不太聪明）——这样必然无法得到正确答案，因为至少要删除多少个字符是由输入决定的——输入一定-&gt;至少要删除多少个字符一定。</span><br><span class="line"></span><br><span class="line">错误做法：想得太少了-&gt;我是傻逼！！！</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;错误的回答！！！！！！！！！！！！！！！！！！！！！！！！！</span><br><span class="line"></span><br><span class="line">  List&lt;String&gt; ans=<span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line"></span><br><span class="line">  StringBuilder path;</span><br><span class="line"></span><br><span class="line">  String s;</span><br><span class="line"></span><br><span class="line">  <span class="type">int</span> cnt;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">public</span> List&lt;String&gt; <span class="title function_">removeInvalidParentheses</span><span class="params">(String s)</span> &#123;</span><br><span class="line"></span><br><span class="line">​    cnt=s.length();</span><br><span class="line"></span><br><span class="line">​    path=<span class="keyword">new</span> <span class="title class_">StringBuilder</span>(s);</span><br><span class="line"></span><br><span class="line">​    <span class="built_in">this</span>.s=s;</span><br><span class="line"></span><br><span class="line">​    dfs(<span class="number">0</span>,<span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">​    <span class="keyword">return</span> ans;</span><br><span class="line"></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">dfs</span><span class="params">(<span class="type">int</span> i,<span class="type">int</span> time)</span>&#123;</span><br><span class="line"></span><br><span class="line">​    <span class="keyword">if</span>(time&gt;cnt)&#123;</span><br><span class="line"></span><br><span class="line">​      <span class="keyword">return</span> ;</span><br><span class="line"></span><br><span class="line">​    &#125;</span><br><span class="line"></span><br><span class="line">​    <span class="keyword">if</span>(i==s.length())&#123;</span><br><span class="line"></span><br><span class="line">​      <span class="keyword">if</span>(checkit(path.toString()))</span><br><span class="line"></span><br><span class="line">​      &#123;<span class="keyword">if</span>(time&lt;cnt)&#123;</span><br><span class="line"></span><br><span class="line">​        cnt=time;</span><br><span class="line"></span><br><span class="line">​        ans.clear();</span><br><span class="line"></span><br><span class="line">​      &#125;</span><br><span class="line"></span><br><span class="line">​      ans.add(path.toString());&#125;</span><br><span class="line"></span><br><span class="line">​      <span class="keyword">return</span>;</span><br><span class="line"></span><br><span class="line">​    &#125;</span><br><span class="line"></span><br><span class="line">​    dfs(i+<span class="number">1</span>,time);</span><br><span class="line"></span><br><span class="line">​    String tmp=path.toString();</span><br><span class="line"></span><br><span class="line">​    path.deleteCharAt(i);</span><br><span class="line"></span><br><span class="line">​    dfs(i+<span class="number">1</span>,time+<span class="number">1</span>);</span><br><span class="line"></span><br><span class="line">​    path=<span class="keyword">new</span> <span class="title class_">StringBuilder</span>(tmp);</span><br><span class="line"></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">checkit</span><span class="params">(String s)</span>&#123;</span><br><span class="line"></span><br><span class="line">​    <span class="type">char</span>[] arr=s.toCharArray();</span><br><span class="line"></span><br><span class="line">​    <span class="type">int</span> open=<span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">​    <span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">0</span>;i&lt;s.length();i++)&#123;</span><br><span class="line"></span><br><span class="line">​      <span class="keyword">if</span>(arr[i]==<span class="string">&#x27;(&#x27;</span>)&#123;</span><br><span class="line"></span><br><span class="line">​        open++;</span><br><span class="line"></span><br><span class="line">​      &#125;<span class="keyword">else</span> <span class="keyword">if</span>(arr[i]==<span class="string">&#x27;)&#x27;</span>)&#123;</span><br><span class="line"></span><br><span class="line">​        open--;</span><br><span class="line"></span><br><span class="line">​      &#125;</span><br><span class="line"></span><br><span class="line">​    &#125;</span><br><span class="line"></span><br><span class="line">​    <span class="keyword">return</span> open==<span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>排列型回溯</p>
+<p><a target="_blank" rel="noopener external nofollow noreferrer" href="https://leetcode.cn/problems/permutations/">46. 全排列</a></p>
+<p>给定一个不含重复数字的数组 nums ，返回其 <em>所有可能的全排列</em> 。你可以 <strong>按任意顺序</strong> 返回答案。</p>
+<p><strong>示例</strong> <strong>1****：</strong></p>
+<p><strong>输入：</strong>nums &#x3D; [1,2,3]</p>
+<p><strong>输出：</strong>[[1,2,3],[1,3,2],[2,1,3],[2,3,1],[3,1,2],[3,2,1]]</p>
+<p><strong>示例</strong> <strong>2****：</strong></p>
+<p><strong>输入：</strong>nums &#x3D; [0,1]</p>
+<p><strong>输出：</strong>[[0,1],[1,0]]</p>
+<p><strong>示例</strong> <strong>3****：</strong></p>
+<p><strong>输入：</strong>nums &#x3D; [1]</p>
+<p><strong>输出：</strong>[[1]]</p>
+<p>相比组合呢，排列中的元素是有顺序的，元素的顺序是有区别的，即123和321算两个排列。</p>
+<p>第1个数选2的话</p>
+<p>当我选了一个数之后</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"></span><br><span class="line">  List&lt;List&lt;Integer&gt;&gt; ans=<span class="keyword">new</span> <span class="title class_">ArrayList</span>();</span><br><span class="line"></span><br><span class="line">  List&lt;Integer&gt; path;</span><br><span class="line"></span><br><span class="line">  <span class="type">int</span>[] nums;</span><br><span class="line"></span><br><span class="line">  <span class="type">boolean</span>[] onPath;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">public</span> List&lt;List&lt;Integer&gt;&gt; <span class="title function_">permute</span><span class="params">(<span class="type">int</span>[] nums)</span> &#123;</span><br><span class="line"></span><br><span class="line">​    <span class="built_in">this</span>.nums=nums;</span><br><span class="line"></span><br><span class="line">​    path = Arrays.asList(<span class="keyword">new</span> <span class="title class_">Integer</span>[nums.length]);</span><br><span class="line"></span><br><span class="line">​    onPath=<span class="keyword">new</span> <span class="title class_">boolean</span>[nums.length];</span><br><span class="line"></span><br><span class="line">​    dfs(<span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">​    <span class="keyword">return</span> ans;</span><br><span class="line"></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">dfs</span><span class="params">(<span class="type">int</span> i)</span>&#123;</span><br><span class="line"></span><br><span class="line">​    <span class="keyword">if</span>(i==nums.length)&#123;</span><br><span class="line"></span><br><span class="line">​      ans.add(<span class="keyword">new</span> <span class="title class_">ArrayList</span>(path));</span><br><span class="line"></span><br><span class="line">​      <span class="keyword">return</span>;</span><br><span class="line"></span><br><span class="line">​    &#125;</span><br><span class="line"></span><br><span class="line">​    <span class="keyword">for</span>(<span class="type">int</span> j=<span class="number">0</span>;j&lt;nums.length;j++)&#123;</span><br><span class="line"></span><br><span class="line">​      <span class="keyword">if</span>(!onPath[j])&#123;</span><br><span class="line"></span><br><span class="line">​        path.set(i,nums[j]);</span><br><span class="line"></span><br><span class="line">​        onPath[j]=<span class="literal">true</span>;</span><br><span class="line"></span><br><span class="line">​        dfs(i+<span class="number">1</span>);</span><br><span class="line"></span><br><span class="line">​        onPath[j]=<span class="literal">false</span>;</span><br><span class="line"></span><br><span class="line">​      &#125;</span><br><span class="line"></span><br><span class="line">​    &#125;</span><br><span class="line"></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>另一种分析时间复杂度的方法：</p>
+<p>其实可以copy这个集合或者哈希表的过程放到下一次递归当中，这样就可以for循环合并起来了，除此以外呢，我们这边复制这个路径也会花费O(n)的时间，如果我们不考虑复制的时间，</p>
+<p>注：这里使用之前讲的叶子节点个数乘以从根节点到叶子节点的路径长度的方法计算时间复杂度。</p>
+<p>比如说根节点肯定每条路径都统计了1次，那有没有更加精确的办法计算时间复杂度。比如说直接计算这棵树的节点个数-&gt;知道节点个数就知道递归次数，节点个数怎么算?我们从下往上看，最后一排，它相当于是从三个数中选三个数的全排列，以此类推。</p>
+<p>但大O记号下，我们没必要算的那么精确。我们已经它是O(n!),我们只需要估计一下它的上界是多少就好了。方法就是用放缩来做</p>
+<p>搜索树上面的分叉是越来越多的，所以我们的排列越多，上面的分叉就越多。所以你这样得到的节点个数是<br>由于6,6&#x2F;2,6&#x2F;4又是一个等比数列所以它加起来是小于2<em>6的或者说2</em>n!的，再加上最后一排——n!。所以说总的节点个数是小于3*n!,这样我们也可以知道这棵树的节点个数是n!。把结论推广一下：</p>
+<p>只要是分叉大于等于二的树，在大O记号下，它的节点个数是等于叶子个数的，在这颗树中，分析上面的除叶子节点外的部分是O(n!)，然后再加上后面这排O(n!).所以总的节点个数还是O(n!),节点个数知道了乘上前面的copy的时间，那就是O(n*n!)的时间复杂度。</p>
+<p>另外一个更通用的做法：把哈希表改成一个布尔数组。</p>
+<p><a target="_blank" rel="noopener external nofollow noreferrer" href="https://leetcode.cn/problems/n-queens/">51. N 皇后</a></p>
+<p>按照国际象棋的规则，皇后可以攻击与之处在同一行或同一列或同一斜线上的棋子。</p>
+<p><strong>n</strong> <strong>皇后问题</strong> 研究的是如何将 n 个皇后放置在 n×n 的棋盘上，并且使皇后彼此之间不能相互攻击。</p>
+<p>给你一个整数 n ，返回所有不同的 <strong>n</strong> <strong>皇后问题</strong> 的解决方案。</p>
+<p>每一种解法包含一个不同的 <strong>n</strong> <strong>皇后问题</strong> 的棋子放置方案，该方案中 ‘Q’ 和 ‘.’ 分别代表了皇后和空位。</p>
+<p><strong>示例</strong> <strong>1****：</strong></p>
+<p>![说明: <a target="_blank" rel="noopener external nofollow noreferrer" href="https://assets.leetcode.com/uploads/2020/11/13/queens.jpg]">https://assets.leetcode.com/uploads/2020/11/13/queens.jpg]</a></p>
+<p><strong>输入：</strong>n &#x3D; 4</p>
+<p><strong>输出：</strong>[[“.Q..”,”…Q”,”Q…”,”..Q.”],[“..Q.”,”Q…”,”…Q”,”.Q..”]]</p>
+<p><strong>解释：</strong>如上图所示，4 皇后问题存在两个不同的解法。</p>
+<p><strong>示例</strong> <strong>2****：</strong></p>
+<p><strong>输入：</strong>n &#x3D; 1</p>
+<p><strong>输出：</strong>[[“Q”]]</p>
+<p>注：鸽巢定理又名抽屉定理：如果你有一行没放皇后，那么后面的n-1行必然有一行放了皇后，列也同理，如果只有不同行不同列的要求，那么就是在枚举全排列，但还有一个不能同一斜线的要求，怎么判断呢？因为我们从上到下进行枚举，那么只需要看右上和左上这两个方向有没有皇后了，对于右上方向，你可以注意到在这条线上行号加列号是不变的。对于左上方向也是类似的，左上方向是行号-列号保持不变。</p>
+<p>既然我们可以用r+c和r-c来判断，那其实就相当于在看r+c和r-c之前有没有出现过，这都可以用哈希表或者说布尔数组来优化：比如说将r+c记到一个布尔数组中，r-c记到一个布尔数组中</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"></span><br><span class="line">  List&lt;List&lt;String&gt;&gt; ans=<span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line"></span><br><span class="line">  <span class="type">int</span> n;</span><br><span class="line"></span><br><span class="line">  <span class="type">int</span>[] col;</span><br><span class="line"></span><br><span class="line">  <span class="type">boolean</span>[] onPath,diag1,diag2;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">public</span> List&lt;List&lt;String&gt;&gt; <span class="title function_">solveNQueens</span><span class="params">(<span class="type">int</span> n)</span> &#123;</span><br><span class="line"></span><br><span class="line">​    <span class="built_in">this</span>.n=n;</span><br><span class="line"></span><br><span class="line">​    col=<span class="keyword">new</span> <span class="title class_">int</span>[n];</span><br><span class="line"></span><br><span class="line">​    onPath=<span class="keyword">new</span> <span class="title class_">boolean</span>[n];</span><br><span class="line"></span><br><span class="line">​    diag1=<span class="keyword">new</span> <span class="title class_">boolean</span>[n*<span class="number">2</span>-<span class="number">1</span>];diag2=<span class="keyword">new</span> <span class="title class_">boolean</span>[n*<span class="number">2</span>-<span class="number">1</span>];</span><br><span class="line"></span><br><span class="line">​    dfs(<span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">​    <span class="keyword">return</span> ans;</span><br><span class="line"></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">dfs</span><span class="params">(<span class="type">int</span> r)</span>&#123;</span><br><span class="line"></span><br><span class="line">​    <span class="keyword">if</span>(r==n)&#123;</span><br><span class="line"></span><br><span class="line">​      List&lt;String&gt; board=<span class="keyword">new</span> <span class="title class_">ArrayList</span>();</span><br><span class="line"></span><br><span class="line">​      <span class="keyword">for</span>(<span class="type">int</span> c:col)&#123;</span><br><span class="line"></span><br><span class="line">​        <span class="type">char</span>[] row=<span class="keyword">new</span> <span class="title class_">char</span>[n];</span><br><span class="line"></span><br><span class="line">​        Arrays.fill(row,<span class="string">&#x27;.&#x27;</span>);</span><br><span class="line"></span><br><span class="line">​        row[c]=<span class="string">&#x27;Q&#x27;</span>;</span><br><span class="line"></span><br><span class="line">​        board.add(<span class="keyword">new</span> <span class="title class_">String</span>(row));</span><br><span class="line"></span><br><span class="line">​      &#125;</span><br><span class="line"></span><br><span class="line">​      ans.add(board);</span><br><span class="line"></span><br><span class="line">​      <span class="keyword">return</span>;</span><br><span class="line"></span><br><span class="line">​    &#125;</span><br><span class="line"></span><br><span class="line">​    <span class="keyword">for</span>(<span class="type">int</span> c=<span class="number">0</span>;c&lt;n;c++)&#123;</span><br><span class="line"></span><br><span class="line">​      <span class="type">int</span> rc=r-c+n-<span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">​      <span class="keyword">if</span>(!onPath[c]&amp;&amp;!diag1[r+c]&amp;&amp;!diag2[rc])&#123;</span><br><span class="line"></span><br><span class="line">​        col[r]=c;</span><br><span class="line"></span><br><span class="line">​        onPath[c]=diag1[r+c]=diag2[rc]=<span class="literal">true</span>;</span><br><span class="line"></span><br><span class="line">​        dfs(r+<span class="number">1</span>);</span><br><span class="line"></span><br><span class="line">​        onPath[c]=diag1[r+c]=diag2[rc]=<span class="literal">false</span>;</span><br><span class="line"></span><br><span class="line">​      &#125;</span><br><span class="line"></span><br><span class="line">​    &#125;</span><br><span class="line"></span><br><span class="line"> </span><br><span class="line"></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://flaskbott.github.io">flaskbott</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://flaskbott.github.io/2023/12/04/%E5%9B%9E%E6%BA%AF/">https://flaskbott.github.io/2023/12/04/回溯/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow noreferrer" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://flaskbott.github.io" target="_blank">FlaskBott's</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E7%AE%97%E6%B3%95%E7%AB%9E%E8%B5%9B/">算法竞赛</a></div><div class="post_share"><div class="social-share" data-image="https://www.hqwalls.com/wp-content/uploads/2013/06/Bing-background-1920x1200-2013-05-18.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/2023/12/04/%E5%8D%95%E8%B0%83%E6%A0%88/" title="单调栈"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">单调栈</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2023/12/04/%E4%B8%A4%E5%8F%98%E9%87%8F%E9%97%AE%E9%A2%98/" title="两变量问题"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-12-04</div><div class="title">两变量问题</div></div></a></div><div><a href="/2023/12/04/%E5%8D%95%E8%B0%83%E6%A0%88/" title="单调栈"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-12-04</div><div class="title">单调栈</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://www.hqwalls.com/wp-content/uploads/2013/06/Bing-background-1920x1200-2013-05-18.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">flaskbott</div><div class="author-info__description">:)</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">3</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">1</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/flaskbott/"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/flaskbott" rel="external nofollow noreferrer" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a><a class="social-icon" href="mailto:929719757@qq.com" rel="external nofollow noreferrer" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #4a7dbe;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/12/04/%E4%B8%A4%E5%8F%98%E9%87%8F%E9%97%AE%E9%A2%98/" title="两变量问题">两变量问题</a><time datetime="2023-12-04T06:51:44.000Z" title="发表于 2023-12-04 14:51:44">2023-12-04</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/12/04/%E5%8D%95%E8%B0%83%E6%A0%88/" title="单调栈">单调栈</a><time datetime="2023-12-04T06:46:06.000Z" title="发表于 2023-12-04 14:46:06">2023-12-04</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/12/04/%E5%9B%9E%E6%BA%AF/" title="回溯">回溯</a><time datetime="2023-12-04T06:41:39.000Z" title="发表于 2023-12-04 14:41:39">2023-12-04</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2023 By flaskbott</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener external nofollow noreferrer" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">Hi, welcome to my <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/flaskbott/">blog</a>!</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload/dist/lazyload.iife.min.js"></script><div class="js-pjax"></div><div class="aplayer no-destroy" data-id="60198" data-server="netease" data-type="playlist" data-fixed="true" data-autoplay="true"> </div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/metingjs/dist/Meting.min.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax/pjax.min.js"></script><script>let pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+
+  // removeEventListener
+  btf.removeGlobalFnEvent('pjax')
+  btf.removeGlobalFnEvent('themeChange')
+
+  document.getElementById('rightside').classList.remove('rightside-show')
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+
+  typeof disqusjs === 'object' && disqusjs.destroy()
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+})
+
+document.addEventListener('pjax:error', e => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404.html')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
