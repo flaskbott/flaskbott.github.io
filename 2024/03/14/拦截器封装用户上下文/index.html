@@ -1,0 +1,226 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>拦截器封装用户上下文 | FlaskBott's</title><meta name="author" content="flaskbott,929719757@qq.com"><meta name="copyright" content="flaskbott"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="拦截器封装用户上下文前情提要我们需要一个拦截器将未登录的用户拦截，另外把登录后的用户的用户信息（token）从Redis里面拿到然后设置到阿里巴巴的TTL（TransmittableThreadLocal）,从而使线程中的任何位置都能拿到用户信息——封装上下文忽略的不需要登录的接口我们登录和注册接口是不需要登录的，另外检查用户名是否可用的接口需要在注册接口中使用，所以也是不需要拦截的由于我们的注册">
+<meta property="og:type" content="article">
+<meta property="og:title" content="拦截器封装用户上下文">
+<meta property="og:url" content="https://flaskbott.github.io/2024/03/14/%E6%8B%A6%E6%88%AA%E5%99%A8%E5%B0%81%E8%A3%85%E7%94%A8%E6%88%B7%E4%B8%8A%E4%B8%8B%E6%96%87/index.html">
+<meta property="og:site_name" content="FlaskBott&#39;s">
+<meta property="og:description" content="拦截器封装用户上下文前情提要我们需要一个拦截器将未登录的用户拦截，另外把登录后的用户的用户信息（token）从Redis里面拿到然后设置到阿里巴巴的TTL（TransmittableThreadLocal）,从而使线程中的任何位置都能拿到用户信息——封装上下文忽略的不需要登录的接口我们登录和注册接口是不需要登录的，另外检查用户名是否可用的接口需要在注册接口中使用，所以也是不需要拦截的由于我们的注册">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.hqwalls.com/wp-content/uploads/2013/06/Bing-background-1920x1200-2013-05-18.jpg">
+<meta property="article:published_time" content="2024-03-13T16:00:00.000Z">
+<meta property="article:modified_time" content="2024-03-28T09:33:25.954Z">
+<meta property="article:author" content="flaskbott">
+<meta property="article:tag" content="项目">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.hqwalls.com/wp-content/uploads/2013/06/Bing-background-1920x1200-2013-05-18.jpg"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://flaskbott.github.io/2024/03/14/%E6%8B%A6%E6%88%AA%E5%99%A8%E5%B0%81%E8%A3%85%E7%94%A8%E6%88%B7%E4%B8%8A%E4%B8%8B%E6%96%87/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: {"limitDay":365,"position":"top","messagePrev":"It has been","messageNext":"days since the last update, the content of the article may be outdated."},
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: true,
+    post: true
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":50,"languages":{"author":"作者: flaskbott","link":"链接: ","source":"来源: FlaskBott's","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: true,
+  islazyload: true,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: true,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '拦截器封装用户上下文',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-03-28 17:33:25'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><meta name="generator" content="Hexo 7.0.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://www.hqwalls.com/wp-content/uploads/2013/06/Bing-background-1920x1200-2013-05-18.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">18</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">4</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page group hide" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fa fa-heartbeat"></i><span> 清单</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background: linear-gradient(20deg, #0062be, #925696, #cc426e, #fb0347)"><nav id="nav"><span id="blog-info"><a href="/" title="FlaskBott's"><span class="site-name">FlaskBott's</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page group hide" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fa fa-heartbeat"></i><span> 清单</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">拦截器封装用户上下文</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2024-03-13T16:00:00.000Z" title="发表于 2024-03-14 00:00:00">2024-03-14</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-03-28T09:33:25.954Z" title="更新于 2024-03-28 17:33:25">2024-03-28</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="拦截器封装用户上下文"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="拦截器封装用户上下文"><a href="#拦截器封装用户上下文" class="headerlink" title="拦截器封装用户上下文"></a>拦截器封装用户上下文</h1><h2 id="前情提要"><a href="#前情提要" class="headerlink" title="前情提要"></a>前情提要</h2><h4 id="我们需要一个拦截器将未登录的用户拦截，另外把登录后的用户的用户信息（token）从Redis里面拿到然后设置到阿里巴巴的TTL（TransmittableThreadLocal）-从而使线程中的任何位置都能拿到用户信息——封装上下文"><a href="#我们需要一个拦截器将未登录的用户拦截，另外把登录后的用户的用户信息（token）从Redis里面拿到然后设置到阿里巴巴的TTL（TransmittableThreadLocal）-从而使线程中的任何位置都能拿到用户信息——封装上下文" class="headerlink" title="我们需要一个拦截器将未登录的用户拦截，另外把登录后的用户的用户信息（token）从Redis里面拿到然后设置到阿里巴巴的TTL（TransmittableThreadLocal）,从而使线程中的任何位置都能拿到用户信息——封装上下文"></a>我们需要一个拦截器将未登录的用户拦截，另外把登录后的用户的用户信息（<code>token</code>）从<code>Redis</code>里面拿到然后设置到阿里巴巴的TTL（<code>TransmittableThreadLocal</code>）,从而使线程中的任何位置都能拿到用户信息——封装上下文</h4><h2 id="忽略的不需要登录的接口"><a href="#忽略的不需要登录的接口" class="headerlink" title="忽略的不需要登录的接口"></a>忽略的不需要登录的接口</h2><h4 id="我们登录和注册接口是不需要登录的，另外检查用户名是否可用的接口需要在注册接口中使用，所以也是不需要拦截的"><a href="#我们登录和注册接口是不需要登录的，另外检查用户名是否可用的接口需要在注册接口中使用，所以也是不需要拦截的" class="headerlink" title="我们登录和注册接口是不需要登录的，另外检查用户名是否可用的接口需要在注册接口中使用，所以也是不需要拦截的"></a>我们登录和注册接口是不需要登录的，另外<code>检查用户名是否可用</code>的接口需要在注册接口中使用，所以也是不需要拦截的</h4><h4 id="由于我们的注册接口是使用RESTful的形式，所以基本上用户管理的所有接口的uri都是相同的，不能直接忽略对应的uri。"><a href="#由于我们的注册接口是使用RESTful的形式，所以基本上用户管理的所有接口的uri都是相同的，不能直接忽略对应的uri。" class="headerlink" title="由于我们的注册接口是使用RESTful的形式，所以基本上用户管理的所有接口的uri都是相同的，不能直接忽略对应的uri。"></a>由于我们的注册接口是使用<code>RESTful</code>的形式，所以基本上用户管理的所有接口的<code>uri</code>都是相同的，不能直接忽略对应的<code>uri</code>。</h4><h4 id="所以就是从请求方法method判断是否是注册接口对应的请求方法（POSTMAPPING）"><a href="#所以就是从请求方法method判断是否是注册接口对应的请求方法（POSTMAPPING）" class="headerlink" title="所以就是从请求方法method判断是否是注册接口对应的请求方法（POSTMAPPING）"></a>所以就是从请求方法<code>method</code>判断是否是注册接口对应的请求方法（<code>POSTMAPPING</code>）</h4><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//如果不是注册用户接口就继续执行拦截器行为</span></span><br><span class="line"><span class="keyword">if</span>(!(Objects.equals(requestURI,<span class="string">&quot;/api/short-link/admin/v1/user&quot;</span>)&amp;&amp;Objects.equals(method,<span class="string">&quot;POST&quot;</span>)))&#123;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="拦截器拦截用户信息是否存在"><a href="#拦截器拦截用户信息是否存在" class="headerlink" title="拦截器拦截用户信息是否存在"></a>拦截器拦截用户信息是否存在</h2><h4 id="首先，判断当前请求的header中的token和username是否为空值"><a href="#首先，判断当前请求的header中的token和username是否为空值" class="headerlink" title="首先，判断当前请求的header中的token和username是否为空值"></a>首先，判断当前请求的<code>header</code>中的<code>token</code>和<code>username</code>是否为空值</h4><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="type">String</span> <span class="variable">username</span> <span class="operator">=</span> httpServletRequest.getHeader(<span class="string">&quot;username&quot;</span>);</span><br><span class="line"><span class="type">String</span> <span class="variable">token</span> <span class="operator">=</span> httpServletRequest.getHeader(<span class="string">&quot;token&quot;</span>);</span><br><span class="line">        <span class="keyword">if</span>(!StrUtil.isAllNotBlank(username,token))&#123;</span><br><span class="line">                    <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">ClientException</span>(USER_TOKEN_FAIL);</span><br><span class="line">           &#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="小tips：在判断值是否空（不是引用空null，是值空），不要用empty，要用blank（覆盖范围比empty大）"><a href="#小tips：在判断值是否空（不是引用空null，是值空），不要用empty，要用blank（覆盖范围比empty大）" class="headerlink" title="小tips：在判断值是否空（不是引用空null，是值空），不要用empty，要用blank（覆盖范围比empty大）"></a><em>小tips：在判断值是否空（不是引用空<code>null</code>，是值空），不要用<code>empty</code>，要用<code>blank</code>（覆盖范围比<code>empty</code>大）</em></h5><h4 id="接下来，判断在我们的Redis里面（token存储器里面）是否存在用户对应信息"><a href="#接下来，判断在我们的Redis里面（token存储器里面）是否存在用户对应信息" class="headerlink" title="接下来，判断在我们的Redis里面（token存储器里面）是否存在用户对应信息"></a>接下来，判断在我们的<code>Redis</code>里面（<code>token</code>存储器里面）是否存在用户对应信息</h4><h2 id="一个良好的习惯"><a href="#一个良好的习惯" class="headerlink" title="一个良好的习惯"></a>一个良好的习惯</h2><h4 id="当我们遇到我们系统的自定义异常时包括用户信息缺失，都应该对应一个异常码，抛出异常并给出友好的提示，便于前端编写对应的行为（前端收到异常码就编写相应行为）——这样前后端就约定好了"><a href="#当我们遇到我们系统的自定义异常时包括用户信息缺失，都应该对应一个异常码，抛出异常并给出友好的提示，便于前端编写对应的行为（前端收到异常码就编写相应行为）——这样前后端就约定好了" class="headerlink" title="当我们遇到我们系统的自定义异常时包括用户信息缺失，都应该对应一个异常码，抛出异常并给出友好的提示，便于前端编写对应的行为（前端收到异常码就编写相应行为）——这样前后端就约定好了"></a>当我们遇到我们系统的自定义异常时包括用户信息缺失，都应该对应一个异常码，抛出异常并给出友好的提示，便于前端编写对应的行为（前端收到异常码就编写相应行为）——这样前后端就约定好了</h4><h5 id=""><a href="#" class="headerlink" title=""></a></h5></article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://flaskbott.github.io">flaskbott</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://flaskbott.github.io/2024/03/14/%E6%8B%A6%E6%88%AA%E5%99%A8%E5%B0%81%E8%A3%85%E7%94%A8%E6%88%B7%E4%B8%8A%E4%B8%8B%E6%96%87/">https://flaskbott.github.io/2024/03/14/拦截器封装用户上下文/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow noreferrer" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://flaskbott.github.io" target="_blank">FlaskBott's</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E9%A1%B9%E7%9B%AE/">项目</a></div><div class="post_share"><div class="social-share" data-image="https://www.hqwalls.com/wp-content/uploads/2013/06/Bing-background-1920x1200-2013-05-18.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2024/03/14/%E7%AE%97%E6%B3%953%E5%8F%B7%E2%80%94%E2%80%942024314/" title="算法笔记3号——2024/3/14"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">算法笔记3号——2024/3/14</div></div></a></div><div class="next-post pull-right"><a href="/2024/03/15/%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B04%E5%8F%B7%E2%80%94%E2%80%942024315/" title="算法笔记4号——2024/3/15"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">算法笔记4号——2024/3/15</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2024/03/11/2024311%E5%AD%A6%E4%B9%A0%E6%97%A5%E5%BF%97/" title="2024&#x2F;3&#x2F;11学习日志"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-03-11</div><div class="title">2024&#x2F;3&#x2F;11学习日志</div></div></a></div><div><a href="/2024/03/10/2024310%E5%AD%A6%E4%B9%A0%E6%97%A5%E5%BF%97/" title="2024&#x2F;3&#x2F;10学习日志"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-03-10</div><div class="title">2024&#x2F;3&#x2F;10学习日志</div></div></a></div><div><a href="/2024/03/07/202437%E5%AD%A6%E4%B9%A0%E6%97%A5%E5%BF%97/" title="2024&#x2F;3&#x2F;7学习日志"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-03-07</div><div class="title">2024&#x2F;3&#x2F;7学习日志</div></div></a></div><div><a href="/2024/01/24/%E4%BC%98%E5%8C%96Windows%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86%E5%BA%94%E7%94%A8%E7%9A%84%E5%86%85%E5%AD%98%E6%B6%88%E8%80%97/" title="优化Windows图像处理应用的内存消耗"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-01-24</div><div class="title">优化Windows图像处理应用的内存消耗</div></div></a></div><div><a href="/2024/01/24/%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86%E5%BA%93%E9%80%89%E6%8B%A9%E6%8C%87%E5%8D%97%EF%BC%9AImageSharp%20vs.%20System.Drawing/" title="图像处理库选择指南：ImageSharp vs. System.Drawing"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-01-24</div><div class="title">图像处理库选择指南：ImageSharp vs. System.Drawing</div></div></a></div><div><a href="/2024/03/09/202439%E5%AD%A6%E4%B9%A0%E6%97%A5%E5%BF%97/" title="2024&#x2F;3&#x2F;9学习日志"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-03-09</div><div class="title">2024&#x2F;3&#x2F;9学习日志</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%8B%A6%E6%88%AA%E5%99%A8%E5%B0%81%E8%A3%85%E7%94%A8%E6%88%B7%E4%B8%8A%E4%B8%8B%E6%96%87"><span class="toc-number">1.</span> <span class="toc-text">拦截器封装用户上下文</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E6%83%85%E6%8F%90%E8%A6%81"><span class="toc-number">1.1.</span> <span class="toc-text">前情提要</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%88%91%E4%BB%AC%E9%9C%80%E8%A6%81%E4%B8%80%E4%B8%AA%E6%8B%A6%E6%88%AA%E5%99%A8%E5%B0%86%E6%9C%AA%E7%99%BB%E5%BD%95%E7%9A%84%E7%94%A8%E6%88%B7%E6%8B%A6%E6%88%AA%EF%BC%8C%E5%8F%A6%E5%A4%96%E6%8A%8A%E7%99%BB%E5%BD%95%E5%90%8E%E7%9A%84%E7%94%A8%E6%88%B7%E7%9A%84%E7%94%A8%E6%88%B7%E4%BF%A1%E6%81%AF%EF%BC%88token%EF%BC%89%E4%BB%8ERedis%E9%87%8C%E9%9D%A2%E6%8B%BF%E5%88%B0%E7%84%B6%E5%90%8E%E8%AE%BE%E7%BD%AE%E5%88%B0%E9%98%BF%E9%87%8C%E5%B7%B4%E5%B7%B4%E7%9A%84TTL%EF%BC%88TransmittableThreadLocal%EF%BC%89-%E4%BB%8E%E8%80%8C%E4%BD%BF%E7%BA%BF%E7%A8%8B%E4%B8%AD%E7%9A%84%E4%BB%BB%E4%BD%95%E4%BD%8D%E7%BD%AE%E9%83%BD%E8%83%BD%E6%8B%BF%E5%88%B0%E7%94%A8%E6%88%B7%E4%BF%A1%E6%81%AF%E2%80%94%E2%80%94%E5%B0%81%E8%A3%85%E4%B8%8A%E4%B8%8B%E6%96%87"><span class="toc-number">1.1.0.1.</span> <span class="toc-text">我们需要一个拦截器将未登录的用户拦截，另外把登录后的用户的用户信息（token）从Redis里面拿到然后设置到阿里巴巴的TTL（TransmittableThreadLocal）,从而使线程中的任何位置都能拿到用户信息——封装上下文</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BF%BD%E7%95%A5%E7%9A%84%E4%B8%8D%E9%9C%80%E8%A6%81%E7%99%BB%E5%BD%95%E7%9A%84%E6%8E%A5%E5%8F%A3"><span class="toc-number">1.2.</span> <span class="toc-text">忽略的不需要登录的接口</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%88%91%E4%BB%AC%E7%99%BB%E5%BD%95%E5%92%8C%E6%B3%A8%E5%86%8C%E6%8E%A5%E5%8F%A3%E6%98%AF%E4%B8%8D%E9%9C%80%E8%A6%81%E7%99%BB%E5%BD%95%E7%9A%84%EF%BC%8C%E5%8F%A6%E5%A4%96%E6%A3%80%E6%9F%A5%E7%94%A8%E6%88%B7%E5%90%8D%E6%98%AF%E5%90%A6%E5%8F%AF%E7%94%A8%E7%9A%84%E6%8E%A5%E5%8F%A3%E9%9C%80%E8%A6%81%E5%9C%A8%E6%B3%A8%E5%86%8C%E6%8E%A5%E5%8F%A3%E4%B8%AD%E4%BD%BF%E7%94%A8%EF%BC%8C%E6%89%80%E4%BB%A5%E4%B9%9F%E6%98%AF%E4%B8%8D%E9%9C%80%E8%A6%81%E6%8B%A6%E6%88%AA%E7%9A%84"><span class="toc-number">1.2.0.1.</span> <span class="toc-text">我们登录和注册接口是不需要登录的，另外检查用户名是否可用的接口需要在注册接口中使用，所以也是不需要拦截的</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%94%B1%E4%BA%8E%E6%88%91%E4%BB%AC%E7%9A%84%E6%B3%A8%E5%86%8C%E6%8E%A5%E5%8F%A3%E6%98%AF%E4%BD%BF%E7%94%A8RESTful%E7%9A%84%E5%BD%A2%E5%BC%8F%EF%BC%8C%E6%89%80%E4%BB%A5%E5%9F%BA%E6%9C%AC%E4%B8%8A%E7%94%A8%E6%88%B7%E7%AE%A1%E7%90%86%E7%9A%84%E6%89%80%E6%9C%89%E6%8E%A5%E5%8F%A3%E7%9A%84uri%E9%83%BD%E6%98%AF%E7%9B%B8%E5%90%8C%E7%9A%84%EF%BC%8C%E4%B8%8D%E8%83%BD%E7%9B%B4%E6%8E%A5%E5%BF%BD%E7%95%A5%E5%AF%B9%E5%BA%94%E7%9A%84uri%E3%80%82"><span class="toc-number">1.2.0.2.</span> <span class="toc-text">由于我们的注册接口是使用RESTful的形式，所以基本上用户管理的所有接口的uri都是相同的，不能直接忽略对应的uri。</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%89%80%E4%BB%A5%E5%B0%B1%E6%98%AF%E4%BB%8E%E8%AF%B7%E6%B1%82%E6%96%B9%E6%B3%95method%E5%88%A4%E6%96%AD%E6%98%AF%E5%90%A6%E6%98%AF%E6%B3%A8%E5%86%8C%E6%8E%A5%E5%8F%A3%E5%AF%B9%E5%BA%94%E7%9A%84%E8%AF%B7%E6%B1%82%E6%96%B9%E6%B3%95%EF%BC%88POSTMAPPING%EF%BC%89"><span class="toc-number">1.2.0.3.</span> <span class="toc-text">所以就是从请求方法method判断是否是注册接口对应的请求方法（POSTMAPPING）</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8B%A6%E6%88%AA%E5%99%A8%E6%8B%A6%E6%88%AA%E7%94%A8%E6%88%B7%E4%BF%A1%E6%81%AF%E6%98%AF%E5%90%A6%E5%AD%98%E5%9C%A8"><span class="toc-number">1.3.</span> <span class="toc-text">拦截器拦截用户信息是否存在</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%A6%96%E5%85%88%EF%BC%8C%E5%88%A4%E6%96%AD%E5%BD%93%E5%89%8D%E8%AF%B7%E6%B1%82%E7%9A%84header%E4%B8%AD%E7%9A%84token%E5%92%8Cusername%E6%98%AF%E5%90%A6%E4%B8%BA%E7%A9%BA%E5%80%BC"><span class="toc-number">1.3.0.1.</span> <span class="toc-text">首先，判断当前请求的header中的token和username是否为空值</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%B0%8Ftips%EF%BC%9A%E5%9C%A8%E5%88%A4%E6%96%AD%E5%80%BC%E6%98%AF%E5%90%A6%E7%A9%BA%EF%BC%88%E4%B8%8D%E6%98%AF%E5%BC%95%E7%94%A8%E7%A9%BAnull%EF%BC%8C%E6%98%AF%E5%80%BC%E7%A9%BA%EF%BC%89%EF%BC%8C%E4%B8%8D%E8%A6%81%E7%94%A8empty%EF%BC%8C%E8%A6%81%E7%94%A8blank%EF%BC%88%E8%A6%86%E7%9B%96%E8%8C%83%E5%9B%B4%E6%AF%94empty%E5%A4%A7%EF%BC%89"><span class="toc-number">1.3.0.1.1.</span> <span class="toc-text">小tips：在判断值是否空（不是引用空null，是值空），不要用empty，要用blank（覆盖范围比empty大）</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%8E%A5%E4%B8%8B%E6%9D%A5%EF%BC%8C%E5%88%A4%E6%96%AD%E5%9C%A8%E6%88%91%E4%BB%AC%E7%9A%84Redis%E9%87%8C%E9%9D%A2%EF%BC%88token%E5%AD%98%E5%82%A8%E5%99%A8%E9%87%8C%E9%9D%A2%EF%BC%89%E6%98%AF%E5%90%A6%E5%AD%98%E5%9C%A8%E7%94%A8%E6%88%B7%E5%AF%B9%E5%BA%94%E4%BF%A1%E6%81%AF"><span class="toc-number">1.3.0.2.</span> <span class="toc-text">接下来，判断在我们的Redis里面（token存储器里面）是否存在用户对应信息</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E4%B8%AA%E8%89%AF%E5%A5%BD%E7%9A%84%E4%B9%A0%E6%83%AF"><span class="toc-number">1.4.</span> <span class="toc-text">一个良好的习惯</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%BD%93%E6%88%91%E4%BB%AC%E9%81%87%E5%88%B0%E6%88%91%E4%BB%AC%E7%B3%BB%E7%BB%9F%E7%9A%84%E8%87%AA%E5%AE%9A%E4%B9%89%E5%BC%82%E5%B8%B8%E6%97%B6%E5%8C%85%E6%8B%AC%E7%94%A8%E6%88%B7%E4%BF%A1%E6%81%AF%E7%BC%BA%E5%A4%B1%EF%BC%8C%E9%83%BD%E5%BA%94%E8%AF%A5%E5%AF%B9%E5%BA%94%E4%B8%80%E4%B8%AA%E5%BC%82%E5%B8%B8%E7%A0%81%EF%BC%8C%E6%8A%9B%E5%87%BA%E5%BC%82%E5%B8%B8%E5%B9%B6%E7%BB%99%E5%87%BA%E5%8F%8B%E5%A5%BD%E7%9A%84%E6%8F%90%E7%A4%BA%EF%BC%8C%E4%BE%BF%E4%BA%8E%E5%89%8D%E7%AB%AF%E7%BC%96%E5%86%99%E5%AF%B9%E5%BA%94%E7%9A%84%E8%A1%8C%E4%B8%BA%EF%BC%88%E5%89%8D%E7%AB%AF%E6%94%B6%E5%88%B0%E5%BC%82%E5%B8%B8%E7%A0%81%E5%B0%B1%E7%BC%96%E5%86%99%E7%9B%B8%E5%BA%94%E8%A1%8C%E4%B8%BA%EF%BC%89%E2%80%94%E2%80%94%E8%BF%99%E6%A0%B7%E5%89%8D%E5%90%8E%E7%AB%AF%E5%B0%B1%E7%BA%A6%E5%AE%9A%E5%A5%BD%E4%BA%86"><span class="toc-number">1.4.0.1.</span> <span class="toc-text">当我们遇到我们系统的自定义异常时包括用户信息缺失，都应该对应一个异常码，抛出异常并给出友好的提示，便于前端编写对应的行为（前端收到异常码就编写相应行为）——这样前后端就约定好了</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link"><span class="toc-number">1.4.0.1.1.</span> <span class="toc-text"></span></a></li></ol></li></ol></li></ol></li></ol></li></ol></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2023 - 2024 By flaskbott</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener external nofollow noreferrer" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">Hi, welcome to my <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/flaskbott/">blog</a>!</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload/dist/lazyload.iife.min.js"></script><div class="js-pjax"></div><div class="aplayer no-destroy" data-id="60198" data-server="netease" data-type="playlist" data-fixed="true" data-autoplay="true"> </div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/metingjs/dist/Meting.min.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax/pjax.min.js"></script><script>let pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+
+  // removeEventListener
+  btf.removeGlobalFnEvent('pjax')
+  btf.removeGlobalFnEvent('themeChange')
+
+  document.getElementById('rightside').classList.remove('rightside-show')
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+
+  typeof disqusjs === 'object' && disqusjs.destroy()
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+})
+
+document.addEventListener('pjax:error', e => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404.html')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
